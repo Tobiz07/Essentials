@@ -1,7 +1,7 @@
 package de.sh00ckbass.minecraft.essential.listeners;
 
 import de.sh00ckbass.minecraft.essential.Essential;
-import de.sh00ckbass.minecraft.essential.data.PlayerProfile;
+import de.sh00ckbass.minecraft.essential.data.types.PlayerProfile;
 import io.papermc.paper.event.player.AsyncChatEvent;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;

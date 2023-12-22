@@ -1,4 +1,4 @@
-package de.sh00ckbass.minecraft.essential.data;
+package de.sh00ckbass.minecraft.essential.data.types;
 
 import lombok.Getter;
 import lombok.Setter;

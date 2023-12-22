@@ -1,6 +1,7 @@
 package de.sh00ckbass.minecraft.essential.data;
 
 import de.sh00ckbass.minecraft.essential.Essential;
+import de.sh00ckbass.minecraft.essential.data.types.PlayerProfile;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 
@@ -25,20 +26,39 @@ public class PlayerProfileManager {
         this.initFileSystem();
     }
 
+    /**
+     * Get the profile of a player
+     *
+     * @param uuid The UUID of the player
+     * @return The player profile
+     */
     public PlayerProfile getPlayerProfile(UUID uuid) {
         return this.loadProfile(uuid);
     }
 
+    /**
+     * Save the profile of a player
+     *
+     * @param uuid The UUID of the player
+     */
     public void savePlayerProfile(UUID uuid) {
         this.saveProfile(uuid);
     }
 
+    /**
+     * Initializes the base file system of the plugin
+     */
     private void initFileSystem() {
         if (!essential.getDataFolder().exists()) {
             essential.getDataFolder().mkdirs();
         }
     }
 
+    /**
+     * Save's the player profile to the player config file (uuid.yml)
+     *
+     * @param uuid The UUID of the player
+     */
     private void saveProfile(UUID uuid) {
         try {
             PlayerProfile playerProfile = this.loadProfile(uuid);
@@ -59,6 +79,12 @@ public class PlayerProfileManager {
         }
     }
 
+    /**
+     * Loads the player profile of the player config file (uuid.yml)
+     *
+     * @param uuid The UUID of the player
+     * @return The player profile
+     */
     private PlayerProfile loadProfile(UUID uuid) {
         PlayerProfile playerProfile = this.playerProfiles.get(uuid);
 
@@ -68,6 +94,7 @@ public class PlayerProfileManager {
 
         File playerProfileFile = new File(this.essential.getDataFolder(), uuid.toString() + ".yml");
 
+        // if the player has no profile a new one get returned
         if (!playerProfileFile.exists()) {
             return new PlayerProfile(uuid, null, new HashMap<>());
         }
