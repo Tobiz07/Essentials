@@ -17,7 +17,7 @@ public class CommandManager {
     }
 
     public void setupCommands() {
-        this.commandManager = new PaperCommandManager(essential);
+        this.commandManager = new PaperCommandManager(this.essential);
 
         this.registerCommands();
     }
@@ -25,11 +25,11 @@ public class CommandManager {
     public void setupListener() {
         PluginManager pluginManager = this.essential.getServer().getPluginManager();
 
-        pluginManager.registerEvents(new PlayerListener(), essential);
+        pluginManager.registerEvents(new PlayerListener(this.essential), this.essential);
     }
 
     private void registerCommands() {
-        this.commandManager.registerCommand(new NickCommand());
+        this.commandManager.registerCommand(new NickCommand(this.essential));
     }
 
 }
