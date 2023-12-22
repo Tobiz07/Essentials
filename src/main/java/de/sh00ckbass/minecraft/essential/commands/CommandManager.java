@@ -2,6 +2,7 @@ package de.sh00ckbass.minecraft.essential.commands;
 
 import co.aikar.commands.PaperCommandManager;
 import de.sh00ckbass.minecraft.essential.Essential;
+import de.sh00ckbass.minecraft.essential.commands.util.NickCommand;
 import org.bukkit.plugin.PluginManager;
 
 public class CommandManager {
@@ -25,7 +26,7 @@ public class CommandManager {
     }
 
     private void registerCommands() {
-
+        this.commandManager.registerCommand(new NickCommand());
     }
 
 }
