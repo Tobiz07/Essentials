@@ -9,13 +9,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+@Getter
 public class PlayerProfile implements ConfigurationSerializable {
 
-    @Getter
     @Setter
     private UUID playerUUID;
 
-    @Getter
     @Setter
     private String nickname;
 
