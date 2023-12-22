@@ -30,6 +30,7 @@ public class CommandManager {
 
     private void registerCommands() {
         this.commandManager.registerCommand(new NickCommand(this.essential));
+        this.commandManager.registerCommand(new HomeCommand(this.essential));
     }
 
 }
