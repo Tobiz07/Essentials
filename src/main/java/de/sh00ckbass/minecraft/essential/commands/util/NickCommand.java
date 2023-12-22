@@ -5,12 +5,20 @@ import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Default;
 import co.aikar.commands.bukkit.contexts.OnlinePlayer;
+import de.sh00ckbass.minecraft.essential.Essential;
+import de.sh00ckbass.minecraft.essential.data.PlayerProfileManager;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import org.bukkit.entity.Player;
 
 @CommandAlias("nick")
 public class NickCommand extends BaseCommand {
+
+    private final PlayerProfileManager profileManager;
+
+    public NickCommand(Essential essential) {
+        this.profileManager = essential.getPlayerProfileManager();
+    }
 
     /**
      * Change the display name of executing player
@@ -26,6 +34,8 @@ public class NickCommand extends BaseCommand {
 
         sender.displayName(nicknameComponent);
         sender.playerListName(nicknameComponent);
+
+        profileManager.getPlayerProfile(sender.getUniqueId()).setNickname(nickname);
     }
 
     /**
@@ -39,6 +49,8 @@ public class NickCommand extends BaseCommand {
         sender.playerListName(null);
 
         sender.sendMessage("§7Du hast deinen Nicknamen zurück gesetzt.");
+
+        profileManager.getPlayerProfile(sender.getUniqueId()).setNickname(null);
     }
 
     /**
@@ -57,6 +69,8 @@ public class NickCommand extends BaseCommand {
 
         playerToNick.getPlayer().displayName(nicknameComponent);
         playerToNick.getPlayer().playerListName(nicknameComponent);
+
+        profileManager.getPlayerProfile(playerToNick.getPlayer().getUniqueId()).setNickname(nickname);
     }
 
 }
