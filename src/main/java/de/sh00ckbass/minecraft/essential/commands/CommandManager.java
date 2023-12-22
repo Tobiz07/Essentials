@@ -3,6 +3,7 @@ package de.sh00ckbass.minecraft.essential.commands;
 import co.aikar.commands.PaperCommandManager;
 import de.sh00ckbass.minecraft.essential.Essential;
 import de.sh00ckbass.minecraft.essential.commands.util.NickCommand;
+import de.sh00ckbass.minecraft.essential.listeners.PlayerListener;
 import org.bukkit.plugin.PluginManager;
 
 public class CommandManager {
@@ -23,6 +24,8 @@ public class CommandManager {
 
     public void setupListener() {
         PluginManager pluginManager = this.essential.getServer().getPluginManager();
+
+        pluginManager.registerEvents(new PlayerListener(), essential);
     }
 
     private void registerCommands() {
