@@ -6,17 +6,17 @@ import org.bukkit.plugin.PluginManager;
 
 public class CommandManager {
 
-    private final PaperCommandManager commandManager;
+    private PaperCommandManager commandManager;
 
     private final Essential essential;
 
     public CommandManager(Essential essential) {
         this.essential = essential;
-
-        this.commandManager = new PaperCommandManager(essential);
     }
 
     public void setupCommands() {
+        this.commandManager = new PaperCommandManager(essential);
+
         this.registerCommands();
     }
 

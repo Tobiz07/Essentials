@@ -7,8 +7,8 @@ public final class Essential extends JavaPlugin {
 
     private final CommandManager commandManager;
 
-    public Essential(CommandManager commandManager) {
-        this.commandManager = commandManager;
+    public Essential() {
+        this.commandManager = new CommandManager(this);
     }
 
     @Override
