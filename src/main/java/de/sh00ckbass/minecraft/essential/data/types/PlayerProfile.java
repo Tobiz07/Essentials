@@ -5,36 +5,21 @@ import lombok.Setter;
 import org.bukkit.Location;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @Getter
 public class PlayerProfile implements ConfigurationSerializable {
 
+    private final Map<String, Location> homes;
     @Setter
     private UUID playerUUID;
-
     @Setter
     private String nickname;
-
-    private final Map<String, Location> homes;
 
     public PlayerProfile(UUID playerUUID, String nickname, Map<String, Location> homes) {
         this.playerUUID = playerUUID;
         this.nickname = nickname;
         this.homes = homes;
-    }
-
-    @Override
-    public Map<String, Object> serialize() {
-        Map<String, Object> data = new HashMap<>();
-
-        data.put("uuid", this.playerUUID.toString());
-        data.put("nickname", this.nickname);
-        data.put("homes", this.homes);
-
-        return data;
     }
 
     public static PlayerProfile deserialize(Map<String, Object> args) {
@@ -47,6 +32,17 @@ public class PlayerProfile implements ConfigurationSerializable {
                 nickname,
                 homes
         );
+    }
+
+    @Override
+    public Map<String, Object> serialize() {
+        Map<String, Object> data = new HashMap<>();
+
+        data.put("uuid", this.playerUUID.toString());
+        data.put("nickname", this.nickname);
+        data.put("homes", this.homes);
+
+        return data;
     }
 
     /**
@@ -77,6 +73,13 @@ public class PlayerProfile implements ConfigurationSerializable {
      */
     public Location removeHome(String name) {
         return this.homes.remove(name);
+    }
+
+    /**
+     * Get all home names
+     */
+    public Set<String> getHomeNames() {
+        return this.homes.keySet();
     }
 
 }

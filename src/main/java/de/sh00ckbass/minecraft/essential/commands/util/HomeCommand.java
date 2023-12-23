@@ -2,6 +2,7 @@ package de.sh00ckbass.minecraft.essential.commands.util;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
+import co.aikar.commands.annotation.CommandCompletion;
 import co.aikar.commands.annotation.Default;
 import co.aikar.commands.annotation.Subcommand;
 import de.sh00ckbass.minecraft.essential.Essential;
@@ -40,6 +41,7 @@ public class HomeCommand extends BaseCommand {
     }
 
     @Subcommand("remove")
+    @CommandCompletion("@homes")
     public void removeHome(Player sender, String name) {
         PlayerProfile profile = this.profileManager.getPlayerProfile(sender.getUniqueId());
         Location oldHome = profile.removeHome(name);
@@ -53,6 +55,7 @@ public class HomeCommand extends BaseCommand {
     }
 
     @Subcommand("tp")
+    @CommandCompletion("@homes")
     public void teleportHome(Player sender, String name) {
         PlayerProfile profile = this.profileManager.getPlayerProfile(sender.getUniqueId());
         Location home = profile.getHomeByName(name);
