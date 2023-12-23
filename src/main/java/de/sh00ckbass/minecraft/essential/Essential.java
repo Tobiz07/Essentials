@@ -2,6 +2,7 @@ package de.sh00ckbass.minecraft.essential;
 
 import de.sh00ckbass.minecraft.essential.commands.CommandManager;
 import de.sh00ckbass.minecraft.essential.data.PlayerProfileManager;
+import de.sh00ckbass.minecraft.essential.util.HeadApi;
 import lombok.Getter;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -12,9 +13,13 @@ public final class Essential extends JavaPlugin {
     @Getter
     private final PlayerProfileManager playerProfileManager;
 
+    @Getter
+    private final HeadApi headApi;
+
     public Essential() {
         this.commandManager = new CommandManager(this);
         this.playerProfileManager = new PlayerProfileManager(this);
+        this.headApi = new HeadApi();
     }
 
     @Override
