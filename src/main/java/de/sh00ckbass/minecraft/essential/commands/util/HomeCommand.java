@@ -1,4 +1,4 @@
-package de.sh00ckbass.minecraft.essential.commands;
+package de.sh00ckbass.minecraft.essential.commands.util;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;

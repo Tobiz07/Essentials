@@ -2,6 +2,7 @@ package de.sh00ckbass.minecraft.essential.commands;
 
 import co.aikar.commands.PaperCommandManager;
 import de.sh00ckbass.minecraft.essential.Essential;
+import de.sh00ckbass.minecraft.essential.commands.util.HomeCommand;
 import de.sh00ckbass.minecraft.essential.commands.util.NickCommand;
 import de.sh00ckbass.minecraft.essential.listeners.PlayerListener;
 import org.bukkit.plugin.PluginManager;
