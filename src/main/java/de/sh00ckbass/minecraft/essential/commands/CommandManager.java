@@ -3,6 +3,7 @@ package de.sh00ckbass.minecraft.essential.commands;
 import co.aikar.commands.PaperCommandManager;
 import de.sh00ckbass.minecraft.essential.Essential;
 import de.sh00ckbass.minecraft.essential.commands.util.GiftCommand;
+import de.sh00ckbass.minecraft.essential.commands.util.HeadCommand;
 import de.sh00ckbass.minecraft.essential.commands.util.HomeCommand;
 import de.sh00ckbass.minecraft.essential.commands.util.NickCommand;
 import de.sh00ckbass.minecraft.essential.listeners.GiftListener;
@@ -36,6 +37,7 @@ public class CommandManager {
         this.commandManager.registerCommand(new NickCommand(this.essential));
         this.commandManager.registerCommand(new HomeCommand(this.essential));
         this.commandManager.registerCommand(new GiftCommand(this.essential));
+        this.commandManager.registerCommand(new HeadCommand(this.essential));
     }
 
 }
