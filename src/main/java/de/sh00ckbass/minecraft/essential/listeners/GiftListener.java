@@ -1,6 +1,5 @@
 package de.sh00ckbass.minecraft.essential.listeners;
 
-import de.sh00ckbass.minecraft.essential.Essential;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import org.bukkit.Material;
@@ -20,10 +19,9 @@ import java.util.Random;
 
 public class GiftListener implements Listener {
 
-
     private final Map<Integer, ItemStack> lootTable = new HashMap<>();
 
-    public GiftListener(Essential essential) {
+    public GiftListener() {
         this.initLootTable();
     }
 
@@ -98,8 +96,8 @@ public class GiftListener implements Listener {
         ItemMeta diamondSwordMeta = diamondSword.getItemMeta();
 
         diamondSwordMeta.displayName(Component.text("§b§lMICHO"));
-        diamondSwordMeta.addEnchant(Enchantment.LOOT_BONUS_MOBS, 10, true);
-        diamondSwordMeta.addEnchant(Enchantment.DURABILITY, 5, true);
+        diamondSwordMeta.addEnchant(Enchantment.LOOTING, 10, true);
+        diamondSwordMeta.addEnchant(Enchantment.UNBREAKING, 5, true);
 
         diamondSword.setItemMeta(diamondSwordMeta);
 
@@ -110,8 +108,8 @@ public class GiftListener implements Listener {
         ItemMeta diamondMeta = diamondPickaxe.getItemMeta();
 
         diamondMeta.displayName(Component.text("§b§lTorben"));
-        diamondMeta.addEnchant(Enchantment.LOOT_BONUS_BLOCKS, 10, true);
-        diamondMeta.addEnchant(Enchantment.DURABILITY, 5, true);
+        diamondMeta.addEnchant(Enchantment.LOOTING, 10, true);
+        diamondMeta.addEnchant(Enchantment.UNBREAKING, 5, true);
 
         diamondPickaxe.setItemMeta(diamondMeta);
 
