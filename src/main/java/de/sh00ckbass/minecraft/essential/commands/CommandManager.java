@@ -11,6 +11,7 @@ import de.sh00ckbass.minecraft.essential.commands.util.NickCommand;
 import de.sh00ckbass.minecraft.essential.data.types.PlayerProfile;
 import de.sh00ckbass.minecraft.essential.listeners.GiftListener;
 import de.sh00ckbass.minecraft.essential.listeners.PlayerListener;
+import de.sh00ckbass.minecraft.essential.listeners.ServerListener;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
@@ -39,6 +40,7 @@ public class CommandManager {
 
         pluginManager.registerEvents(new PlayerListener(this.essential), this.essential);
         pluginManager.registerEvents(new GiftListener(this.essential), this.essential);
+        pluginManager.registerEvents(new ServerListener(this.essential), this.essential);
     }
 
     private void registerCommands() {
