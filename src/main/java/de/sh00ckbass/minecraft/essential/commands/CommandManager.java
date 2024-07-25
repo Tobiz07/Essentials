@@ -39,7 +39,7 @@ public class CommandManager {
         PluginManager pluginManager = this.essential.getServer().getPluginManager();
 
         pluginManager.registerEvents(new PlayerListener(this.essential), this.essential);
-        pluginManager.registerEvents(new GiftListener(this.essential), this.essential);
+        pluginManager.registerEvents(new GiftListener(), this.essential);
         pluginManager.registerEvents(new ServerListener(this.essential), this.essential);
     }
 
