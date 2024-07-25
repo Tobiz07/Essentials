@@ -17,7 +17,6 @@ public class PlayerProfileManager {
 
     private final Map<UUID, PlayerProfile> playerProfiles = new HashMap<>();
 
-
     public PlayerProfileManager(Essential essential) {
         this.essential = essential;
 
@@ -43,6 +42,13 @@ public class PlayerProfileManager {
      */
     public void savePlayerProfile(UUID uuid) {
         this.saveProfile(uuid);
+    }
+
+    /**
+     * Save all player profiles
+     */
+    public void saveAllPlayerProfiles() {
+        this.playerProfiles.forEach((uuid, profile) -> this.savePlayerProfile(uuid));
     }
 
     /**
