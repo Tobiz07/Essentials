@@ -5,10 +5,13 @@ import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.CommandCompletion;
 import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Default;
+import co.aikar.commands.annotation.PreCommand;
 import de.sh00ckbass.minecraft.essential.Essential;
+import de.sh00ckbass.minecraft.essential.data.types.PluginConfig;
 import de.sh00ckbass.minecraft.essential.util.HeadApi;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -21,9 +24,22 @@ import java.util.List;
 public class GiftCommand extends BaseCommand {
 
     private final HeadApi headApi;
+    private final PluginConfig config;
 
     public GiftCommand(Essential essential) {
         this.headApi = essential.getHeadApi();
+        this.config = essential.getPluginConfigManager().getConfig();
+    }
+
+    @PreCommand
+    public boolean checkIfCommandIsEnabled(CommandSender commandSender) {
+        boolean isDisabled = !config.isGiftCommandEnabled();
+
+        if (isDisabled) {
+            commandSender.sendMessage("§cDieser Befehl ist deaktiviert.");
+        }
+
+        return isDisabled;
     }
 
     @Default

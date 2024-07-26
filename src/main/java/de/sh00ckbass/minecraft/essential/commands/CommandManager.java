@@ -8,6 +8,7 @@ import de.sh00ckbass.minecraft.essential.commands.util.GiftCommand;
 import de.sh00ckbass.minecraft.essential.commands.util.HeadCommand;
 import de.sh00ckbass.minecraft.essential.commands.util.HomeCommand;
 import de.sh00ckbass.minecraft.essential.commands.util.NickCommand;
+import de.sh00ckbass.minecraft.essential.commands.util.ToggleCommandCommand;
 import de.sh00ckbass.minecraft.essential.data.types.PlayerProfile;
 import de.sh00ckbass.minecraft.essential.listeners.GiftListener;
 import de.sh00ckbass.minecraft.essential.listeners.PlayerListener;
@@ -48,6 +49,7 @@ public class CommandManager {
         this.commandManager.registerCommand(new HomeCommand(this.essential));
         this.commandManager.registerCommand(new GiftCommand(this.essential));
         this.commandManager.registerCommand(new HeadCommand(this.essential));
+        this.commandManager.registerCommand(new ToggleCommandCommand(this.essential));
     }
 
     private void registerCommandCompletions() {

@@ -3,7 +3,6 @@ package de.sh00ckbass.minecraft.essential.data;
 import de.sh00ckbass.minecraft.essential.Essential;
 import de.sh00ckbass.minecraft.essential.data.types.PlayerProfile;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.configuration.serialization.ConfigurationSerialization;
 
 import java.io.File;
 import java.io.IOException;
@@ -11,18 +10,16 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class PlayerProfileManager {
+public class PlayerProfileManager extends BaseConfigManager<PlayerProfile> {
 
     private final Essential essential;
 
     private final Map<UUID, PlayerProfile> playerProfiles = new HashMap<>();
 
     public PlayerProfileManager(Essential essential) {
+        super(essential);
+
         this.essential = essential;
-
-        ConfigurationSerialization.registerClass(PlayerProfile.class);
-
-        this.initFileSystem();
     }
 
     /**
@@ -49,15 +46,6 @@ public class PlayerProfileManager {
      */
     public void saveAllPlayerProfiles() {
         this.playerProfiles.forEach((uuid, profile) -> this.savePlayerProfile(uuid));
-    }
-
-    /**
-     * Initializes the base file system of the plugin
-     */
-    private void initFileSystem() {
-        if (!essential.getDataFolder().exists()) {
-            essential.getDataFolder().mkdirs();
-        }
     }
 
     /**
