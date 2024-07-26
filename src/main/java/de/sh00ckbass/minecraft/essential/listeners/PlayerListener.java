@@ -1,12 +1,12 @@
 package de.sh00ckbass.minecraft.essential.listeners;
 
 import de.sh00ckbass.minecraft.essential.Essential;
+import de.sh00ckbass.minecraft.essential.data.inventories.DeathItemInventory;
 import de.sh00ckbass.minecraft.essential.data.types.PlayerProfile;
 import de.sh00ckbass.minecraft.essential.util.InventoryUtils;
 import io.papermc.paper.event.player.AsyncChatEvent;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -20,18 +20,19 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryHolder;
-import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class PlayerListener implements Listener {
 
@@ -111,19 +112,42 @@ public class PlayerListener implements Listener {
 
         event.setCancelled(true);
 
-        Inventory deathItemsInventory = this.getDeathItemsInventory(chest, player);
+        Inventory deathItemsInventory = this.getDeathItemsInventory(chest);
 
-        InventoryView inventoryView = player.openInventory(deathItemsInventory);
-
+        player.openInventory(deathItemsInventory);
     }
 
-    private Inventory getDeathItemsInventory(Chest chest, InventoryHolder inventoryHolder) {
+    @EventHandler
+    public void onInventoryClose(InventoryCloseEvent event) {
+        Inventory inventory = event.getInventory();
+
+        if (!(inventory.getHolder(false) instanceof DeathItemInventory deathItemInventory)) {
+            return;
+        }
+
+        inventory = deathItemInventory.getInventory();
+        Chest chest = deathItemInventory.getDeathChest();
+        ItemStack[] contents = inventory.getContents();
+
+        if (Arrays.stream(contents).allMatch(Objects::isNull)) {
+            chest.setType(Material.AIR);
+            chest.update(true);
+            return;
+        }
+
+        String deathChestItems = InventoryUtils.ConvertItemsToBase64(contents);
+        this.storeDeathChestItems(chest, deathChestItems);
+    }
+
+    private Inventory getDeathItemsInventory(Chest chest) {
         PersistentDataContainer chestDataContainer = chest.getPersistentDataContainer();
 
         String encodedItems = chestDataContainer.get(this.deathChestInventoryKey, PersistentDataType.STRING);
         ItemStack[] deathItems = InventoryUtils.ConvertBase64ToItemStackArray(encodedItems);
 
-        Inventory inventory = Bukkit.createInventory(inventoryHolder, 54);
+        DeathItemInventory deathItemInventory = new DeathItemInventory(this.essential, chest);
+
+        Inventory inventory = deathItemInventory.getInventory();
         inventory.addItem(deathItems);
 
         return inventory;
@@ -146,14 +170,18 @@ public class PlayerListener implements Listener {
 
         String encodedPlayerItems = this.getPlayerItems(playerInventory);
 
-        chest.getPersistentDataContainer().set(this.deathChestInventoryKey, PersistentDataType.STRING, encodedPlayerItems);
-        chest.update();
+        this.storeDeathChestItems(chest, encodedPlayerItems);
 
         player.sendMessage("§eDeathChest §7>> " +
                 "Du bist bei X §e" + location.getBlockX() +
                 "§7 Y §e" + location.getBlockY() +
                 "§7 Z §e" + location.getBlockZ() +
                 " §7gestorben.");
+    }
+
+    private void storeDeathChestItems(Chest chest, String encodedItems) {
+        chest.getPersistentDataContainer().set(this.deathChestInventoryKey, PersistentDataType.STRING, encodedItems);
+        chest.update();
     }
 
     private String getPlayerItems(PlayerInventory playerInventory) {
