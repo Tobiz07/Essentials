@@ -7,6 +7,7 @@ import de.sh00ckbass.minecraft.essential.util.InventoryUtils;
 import io.papermc.paper.event.player.AsyncChatEvent;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -14,7 +15,9 @@ import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.damage.DamageSource;
 import org.bukkit.damage.DamageType;
+import org.bukkit.entity.Display;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.TextDisplay;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
@@ -34,15 +37,18 @@ import org.bukkit.persistence.PersistentDataType;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 public class PlayerListener implements Listener {
 
     private final Essential essential;
     private final NamespacedKey deathChestInventoryKey;
+    private final NamespacedKey deathChestTitleKey;
 
     public PlayerListener(Essential essential) {
         this.essential = essential;
         this.deathChestInventoryKey = new NamespacedKey(essential, "player-death-chest");
+        this.deathChestTitleKey = new NamespacedKey(essential, "player-death-chest-title");
     }
 
     @EventHandler
@@ -77,7 +83,7 @@ public class PlayerListener implements Listener {
     @SuppressWarnings("UnstableApiUsage")
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent event) {
-        if (playerDiedInVoid(event.getDamageSource())) {
+        if (this.playerDiedInVoid(event.getDamageSource())) {
             return;
         }
 
@@ -131,6 +137,8 @@ public class PlayerListener implements Listener {
         ItemStack[] contents = inventory.getContents();
 
         if (Arrays.stream(contents).allMatch(Objects::isNull)) {
+            this.removeDeathChestTitle(chest);
+
             chest.setType(Material.AIR);
             chest.update(true);
             return;
@@ -185,6 +193,8 @@ public class PlayerListener implements Listener {
 
         this.storeDeathChestItems(chest, encodedPlayerItems);
 
+        this.spawnDeathChestTitle(block, chest, player.getName());
+
         player.sendMessage("§eDeathChest §7>> " +
                 "Du bist bei X §e" + location.getBlockX() +
                 "§7 Y §e" + location.getBlockY() +
@@ -205,6 +215,29 @@ public class PlayerListener implements Listener {
     private void storeDeathChestItems(Chest chest, String encodedItems) {
         chest.getPersistentDataContainer().set(this.deathChestInventoryKey, PersistentDataType.STRING, encodedItems);
         chest.update();
+    }
+
+    private void spawnDeathChestTitle(Block block, Chest chest, String playerName) {
+        Location titleLocation = block.getLocation().add(0.5, 1.5, 0.5);
+        TextDisplay display = block.getWorld().spawn(titleLocation, TextDisplay.class, entity -> {
+            entity.text(Component.text("Death Chest von " + playerName, NamedTextColor.RED));
+            entity.setBillboard(Display.Billboard.VERTICAL);
+        });
+
+        chest.getPersistentDataContainer().set(this.deathChestTitleKey, PersistentDataType.STRING, display.getUniqueId().toString());
+        chest.update();
+    }
+
+    private void removeDeathChestTitle(Chest chest) {
+        String titleUUIDStr = chest.getPersistentDataContainer().get(this.deathChestTitleKey, PersistentDataType.STRING);
+        if (titleUUIDStr != null) {
+            UUID titleUUID = UUID.fromString(titleUUIDStr);
+            TextDisplay display = (TextDisplay) chest.getBlock().getWorld().getEntity(titleUUID);
+
+            if (display != null) {
+                display.remove();
+            }
+        }
     }
 
     private String getPlayerItems(PlayerInventory playerInventory) {
