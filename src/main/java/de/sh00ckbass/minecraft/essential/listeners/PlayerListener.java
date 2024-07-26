@@ -18,6 +18,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
@@ -139,6 +140,18 @@ public class PlayerListener implements Listener {
         this.storeDeathChestItems(chest, deathChestItems);
     }
 
+    @EventHandler
+    public void onBlockBreak(BlockBreakEvent event) {
+        Block block = event.getBlock();
+        if (!(block.getState() instanceof Chest chest)) {
+            return;
+        }
+
+        if (this.assertChestIsDeathChest(chest)) {
+            event.setCancelled(true);
+        }
+    }
+
     private Inventory getDeathItemsInventory(Chest chest) {
         PersistentDataContainer chestDataContainer = chest.getPersistentDataContainer();
 
@@ -163,7 +176,7 @@ public class PlayerListener implements Listener {
         PlayerInventory playerInventory = player.getInventory();
 
         Location location = player.getLocation();
-        Block block = location.getBlock();
+        Block block = this.getDeathChestSpawnBlock(location);
         block.setType(Material.CHEST);
 
         Chest chest = (Chest) block.getState();
@@ -179,6 +192,16 @@ public class PlayerListener implements Listener {
                 " §7gestorben.");
     }
 
+    private Block getDeathChestSpawnBlock(Location playerLocation) {
+        Block currentLocationBlock = playerLocation.getBlock();
+
+        if (currentLocationBlock.getType().isSolid()) {
+            return this.getDeathChestSpawnBlock(playerLocation.add(0, 1, 0));
+        }
+
+        return currentLocationBlock;
+    }
+
     private void storeDeathChestItems(Chest chest, String encodedItems) {
         chest.getPersistentDataContainer().set(this.deathChestInventoryKey, PersistentDataType.STRING, encodedItems);
         chest.update();
@@ -188,6 +211,13 @@ public class PlayerListener implements Listener {
         ItemStack[] playerItems = playerInventory.getContents();
 
         return InventoryUtils.ConvertItemsToBase64(playerItems);
+    }
+
+    @SuppressWarnings("UnstableApiUsage")
+    private boolean playerDiedInVoid(DamageSource damageSource) {
+        DamageType damageType = damageSource.getDamageType();
+
+        return damageType == DamageType.OUT_OF_WORLD;
     }
 
     private void savePlayerProfile(Player player) {
@@ -207,13 +237,6 @@ public class PlayerListener implements Listener {
             player.displayName(Component.text(nickname));
             player.playerListName(Component.text(nickname));
         }
-    }
-
-    @SuppressWarnings("UnstableApiUsage")
-    private boolean playerDiedInVoid(DamageSource damageSource) {
-        DamageType damageType = damageSource.getDamageType();
-
-        return damageType == DamageType.OUT_OF_WORLD;
     }
 
     private TextComponent getTextComponentOfComponent(Component component) {
