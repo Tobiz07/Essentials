@@ -4,14 +4,17 @@ import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.CommandCompletion;
 import co.aikar.commands.annotation.Default;
+import co.aikar.commands.annotation.PreCommand;
 import co.aikar.commands.annotation.Subcommand;
 import de.sh00ckbass.minecraft.essential.Essential;
 import de.sh00ckbass.minecraft.essential.data.PlayerProfileManager;
 import de.sh00ckbass.minecraft.essential.data.types.PlayerProfile;
+import de.sh00ckbass.minecraft.essential.data.types.PluginConfig;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 import org.bukkit.Location;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.Map;
@@ -20,9 +23,22 @@ import java.util.Map;
 public class HomeCommand extends BaseCommand {
 
     private final PlayerProfileManager profileManager;
+    private final PluginConfig config;
 
     public HomeCommand(Essential essential) {
         this.profileManager = essential.getPlayerProfileManager();
+        this.config = essential.getPluginConfigManager().getConfig();
+    }
+
+    @PreCommand
+    public boolean checkIfCommandIsEnabled(CommandSender commandSender) {
+        boolean isDisabled = !config.isHomeCommandEnabled();
+
+        if (isDisabled) {
+            commandSender.sendMessage("§cDieser Befehl ist deaktiviert.");
+        }
+
+        return isDisabled;
     }
 
     @Default

@@ -4,20 +4,36 @@ import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Default;
+import co.aikar.commands.annotation.PreCommand;
 import co.aikar.commands.bukkit.contexts.OnlinePlayer;
 import de.sh00ckbass.minecraft.essential.Essential;
 import de.sh00ckbass.minecraft.essential.data.PlayerProfileManager;
+import de.sh00ckbass.minecraft.essential.data.types.PluginConfig;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 @CommandAlias("nick")
 public class NickCommand extends BaseCommand {
 
     private final PlayerProfileManager profileManager;
+    private final PluginConfig config;
 
     public NickCommand(Essential essential) {
         this.profileManager = essential.getPlayerProfileManager();
+        this.config = essential.getPluginConfigManager().getConfig();
+    }
+
+    @PreCommand
+    public boolean checkIfCommandIsEnabled(CommandSender commandSender) {
+        boolean isDisabled = config.isNickCommandEnabled();
+
+        if (isDisabled) {
+            commandSender.sendMessage("§cDieser Befehl ist deaktiviert.");
+        }
+
+        return isDisabled;
     }
 
     /**
