@@ -27,7 +27,7 @@ public class NickCommand extends BaseCommand {
 
     @PreCommand
     public boolean checkIfCommandIsEnabled(CommandSender commandSender) {
-        boolean isDisabled = config.isNickCommandEnabled();
+        boolean isDisabled = !config.isNickCommandEnabled();
 
         if (isDisabled) {
             commandSender.sendMessage("§cDieser Befehl ist deaktiviert.");
